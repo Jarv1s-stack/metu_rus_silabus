@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Русский язык · уровень C1 — учебный портал (МИТУ)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Playfair Display for academic serif headers, Inter for crisp body copy -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            800: '#152238',
+                            900: '#1a2b4c',
+                            950: '#0f1a30',
+                        },
+                        burgundy: {
+                            700: '#8b0000',
+                            800: '#7a1c27',
+                            900: '#5c131c',
+                        },
+                        ivory: {
+                            50: '#fdfbf7',
+                            100: '#fcfbf9',
+                            200: '#f4f0e6',
+                            300: '#e8e2d3',
+                        },
+                        gold: {
+                            500: '#c5a059',
+                            600: '#b08d46',
+                            700: '#8c6d30',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'EB Garamond', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        garamond: ['EB Garamond', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f7f5f0;
+            color: #2c2c2c;
+            font-family: 'Inter', sans-serif;
+        }
+        .academic-header {
+            background-color: #1a2b4c;
+            border-bottom: 4px solid #c5a059;
+        }
+        .academic-border {
+            border: 1px solid #dcd6c8;
+        }
+        .academic-card {
+            background-color: #ffffff;
+            border: 1px solid #e2dcce;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+        .sidebar-item-active {
+            background-color: #7a1c27;
+            color: #ffffff !important;
+            border-left: 4px solid #c5a059;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1edb520;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c5a05980;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between custom-scrollbar">
+
+<header class="academic-header text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+      <div class="flex items-center space-x-4">
+        <div class="w-14 h-14 rounded-full bg-ivory-100 border-2 border-gold-500 flex items-center justify-center shadow-inner flex-shrink-0 overflow-hidden">
+          <img src="logo.png" alt="Логотип МИТУ" class="w-full h-full object-contain p-1">
+        </div>
+        <div>
+          <span class="text-xs font-semibold tracking-widest uppercase bg-gold-500 text-navy-950 px-2 py-0.5 rounded-sm">METU</span>
+          <h1 class="text-xl sm:text-2xl font-serif font-bold text-ivory-50 tracking-wide mt-1">Русский язык</h1>
+        </div>
+      </div>
+      <div class="hidden lg:flex items-center gap-3 text-xs text-right border-l border-gray-600 pl-4">
+        <img src="teacher1.jpeg" alt="Тукебаева Жаныл Аубакировна"
+             class="w-14 h-14 rounded-full object-cover border-2 border-gold-500 shadow-md flex-shrink-0">
+        <div>
+          <div class="text-gray-300">Преподаватель: <span class="text-white font-medium">Тукебаева Жаныл Аубакировна</span></div>
+          <div class="text-gray-300 mt-1">Семестр: <span class="text-white font-medium">осенний 2025/2026</span> · Контроль: <span class="text-white font-medium">экзамен</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="bg-navy-950 border-t border-navy-800 text-sm">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+      <div class="flex space-x-1 overflow-x-auto py-1 custom-scrollbar" id="navbar"></div>
+    </div>
+  </nav>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+    <aside class="lg:col-span-1 space-y-6">
+      <div class="academic-card rounded p-4 border-t-4 border-burgundy-800">
+        <h3 class="font-serif font-bold text-navy-900 mb-3">Подготовка к экзамену</h3>
+        <div class="flex justify-between text-xs mb-2">
+          <span class="text-gray-600">Вопросов изучено:</span>
+          <span class="font-semibold text-navy-900" id="side-progress-text">0 / 0</span>
+        </div>
+        <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+          <div id="side-progress-bar" class="bg-burgundy-800 h-full rounded-full" style="width:0%"></div>
+        </div>
+        <p class="text-[10px] text-gray-500 mt-2">Отметки хранятся в этом браузере.</p>
+      </div>
+      <div class="academic-card rounded overflow-hidden">
+        <div class="bg-navy-900 text-ivory-100 px-4 py-2.5 font-serif text-sm font-semibold border-b border-gold-600">Разделы портала</div>
+        <div class="divide-y divide-gray-200 text-xs" id="side-nav"></div>
+      </div>
+    </aside>
+
+    <section class="lg:col-span-3 min-h-[600px]">
+
+      <div id="tab-home" class="tab-content space-y-6">
+        <div class="academic-card p-6 rounded-md border-t-4 border-navy-900">
+          <span class="text-xs font-bold text-burgundy-800 tracking-widest uppercase">О дисциплине</span>
+          <h2 class="text-2xl sm:text-3xl font-serif font-bold text-navy-900 mt-1 mb-3">Русский язык · уровень C1</h2>
+          <p class="text-sm text-gray-700 leading-relaxed mb-4">Программа построена по тематическому принципу: каждая неделя раскрывает вопросы функциональной стилистики и работы с научным текстом по специальности на уровне владения языком C1.</p>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gray-200 text-center">
+            <div><div class="font-serif font-bold text-2xl text-navy-900">5</div><div class="text-[11px] text-gray-600">кредитов ECTS</div></div>
+            <div><div class="font-serif font-bold text-2xl text-navy-900">15</div><div class="text-[11px] text-gray-600">недель / 4 модуля</div></div>
+            <div><div class="font-serif font-bold text-2xl text-navy-900">45+75+30</div><div class="text-[11px] text-gray-600">практика / СРС / СРСП, часов</div></div>
+            <div><div class="font-serif font-bold text-2xl text-navy-900">C1</div><div class="text-[11px] text-gray-600">уровень владения</div></div>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="academic-card p-6 rounded-md">
+            <h3 class="font-serif font-bold text-navy-900 mb-2">Цель и задачи</h3>
+            <p class="text-xs text-gray-700 leading-relaxed">Формирование коммуникативной компетенции — способности решать лингвистическими средствами реальные коммуникативные задачи научной сферы: владение видами речевой деятельности, стилями языка и продуцированием устной и письменной научной речи.</p>
+          </div>
+          <div class="academic-card p-6 rounded-md">
+            <h3 class="font-serif font-bold text-navy-900 mb-2">Результаты обучения</h3>
+            <ul class="text-xs text-gray-700 space-y-1.5">
+              <li><b>РО1</b> — понимать цели и задачи профессиональной и научной коммуникации</li>
+              <li><b>РО2</b> — интерпретировать функционально-стилевые особенности текстов</li>
+              <li><b>РО5</b> — создавать тексты разного типа, жанра и стиля</li>
+              <li><b>РО7</b> — демонстрировать независимость мышления и аналитические навыки</li>
+            </ul>
+          </div>
+        </div>
+        <div class="academic-card p-6 rounded-md">
+          <h3 class="font-serif font-bold text-navy-900 mb-3">СРСП и СРС</h3>
+          <div class="grid md:grid-cols-3 gap-4 text-xs text-gray-700">
+            <div class="p-3 border border-gray-200 rounded bg-ivory-50"><b class="font-serif text-navy-900">СРСП</b><p class="mt-1">Работа с преподавателем: разбор тем, консультации, презентации по плану.</p></div>
+            <div class="p-3 border border-gray-200 rounded bg-ivory-50"><b class="font-serif text-navy-900">СРС</b><p class="mt-1">Самостоятельная подготовка текстов, анализ источников, письменные задания — 5 часов на тему.</p></div>
+            <div class="p-3 border border-gray-200 rounded bg-ivory-50"><b class="font-serif text-navy-900">Формат</b><p class="mt-1">Презентация, письменный анализ текста, устное сообщение — согласно неделе. Задания каждой недели — в разделе «План».</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-plan" class="tab-content hidden space-y-6">
+        <div class="academic-card p-6 rounded-md">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-200 pb-4 mb-6">
+            <div>
+              <h2 class="text-2xl font-serif font-bold text-navy-900">Календарно-тематический план</h2>
+              <p class="text-xs text-gray-600">15 недель · 4 модуля. Откройте неделю, чтобы увидеть задания СРС/СРСП.</p>
+            </div>
+            <div class="mt-2 sm:mt-0 flex space-x-2">
+              <button onclick="togglePlan(true)" class="text-xs px-3 py-1.5 border border-gray-300 rounded text-navy-900 hover:bg-gray-100">Раскрыть все</button>
+              <button onclick="togglePlan(false)" class="text-xs px-3 py-1.5 border border-gray-300 rounded text-navy-900 hover:bg-gray-100">Свернуть все</button>
+            </div>
+          </div>
+          <div id="plan-root" class="space-y-6"></div>
+        </div>
+      </div>
+
+      <div id="tab-materials" class="tab-content hidden space-y-6">
+        <div class="academic-card p-6 rounded-md">
+          <h2 class="text-2xl font-serif font-bold text-navy-900">Открытые источники по темам курса</h2>
+          <p class="text-xs text-gray-600 mb-4">Грамота.ру, КиберЛенинка и учебные ресурсы вузов.</p>
+          <div id="mat-chips" class="flex flex-wrap gap-2 text-xs mb-4"></div>
+          <div id="mat-root" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+      </div>
+
+      <div id="tab-literature" class="tab-content hidden space-y-6">
+        <div class="academic-card p-6 rounded-md">
+          <h2 class="text-2xl font-serif font-bold text-navy-900 mb-4">Список литературы</h2>
+          <h3 class="font-serif font-bold text-navy-900 text-sm mb-2">Основная литература</h3>
+          <div id="lit-main" class="space-y-3 mb-6"></div>
+          <h3 class="font-serif font-bold text-navy-900 text-sm mb-2">Дополнительная литература</h3>
+          <div id="lit-extra" class="space-y-3"></div>
+        </div>
+      </div>
+
+      <div id="tab-exam" class="tab-content hidden space-y-6">
+        <div class="academic-card p-6 rounded-md">
+          <h2 class="text-2xl font-serif font-bold text-navy-900">Подготовка к экзамену</h2>
+          <p class="text-xs text-gray-600 mb-4">Формула итоговой оценки: И = 0,6·РКср + 0,4·Э (рейтинг допуска — 60%, экзамен — 40%).</p>
+          <div class="overflow-x-auto mb-8">
+            <table class="w-full text-xs border border-gray-200">
+              <thead class="bg-navy-900 text-ivory-100"><tr><th class="p-2 text-left">Буква</th><th class="p-2 text-left">Балл</th><th class="p-2 text-left">%</th><th class="p-2 text-left">Оценка</th></tr></thead>
+              <tbody id="grades-body" class="divide-y divide-gray-200"></tbody>
+            </table>
+          </div>
+          <h3 class="font-serif font-bold text-navy-900 mb-1">Экзаменационные вопросы</h3>
+          <p class="text-xs text-gray-600 mb-3">Полный перечень вопросов к письменному экзамену. Отмечайте изученные — отметки сохраняются в этом браузере.</p>
+          <div class="mb-3">
+            <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden"><div id="exam-bar" class="bg-burgundy-800 h-full rounded-full" style="width:0%"></div></div>
+            <div id="exam-text" class="text-[11px] text-gray-500 mt-1">0 / 0 отмечено как изучено</div>
+          </div>
+          <div class="overflow-x-auto"><table class="w-full text-xs border border-gray-200">
+            <thead class="bg-ivory-200 text-navy-900"><tr><th class="p-2 w-10 text-left">№</th><th class="p-2 text-left">Вопрос</th><th class="p-2 w-20 text-center">Изучено</th></tr></thead>
+            <tbody id="exam-root" class="divide-y divide-gray-200"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <div id="tab-books" class="tab-content hidden space-y-6">
+        <div class="academic-card p-6 rounded-md">
+          <h2 class="text-2xl font-serif font-bold text-navy-900">Читаем по-русски</h2>
+          <p class="text-xs text-gray-600 mb-3">Классика русской литературы для развития языка на уровне C1.</p>
+          <div class="text-xs text-gray-700 bg-ivory-100 border-l-4 border-gold-600 p-3 mb-4 leading-relaxed">Все произведения — общественное достояние. Ссылка открывает страницу на <b>Викитеке</b> (для Тургенева, Достоевского и Толстого — страницу автора); там в боковом меню есть кнопки «Скачать EPUB / PDF / MOBI». «Мастер и Маргарита» ведёт на академический архив с полным текстом в PDF.</div>
+          <div id="books-root" class="space-y-3"></div>
+        </div>
+      </div>
+
+      <div id="tab-assistant" class="tab-content hidden space-y-6">
+        <div class="academic-card p-6 rounded-md flex flex-col h-[650px]">
+          <div class="flex items-center justify-between border-b border-gray-200 pb-3 mb-4">
+            <div>
+              <h2 class="font-serif font-bold text-navy-900 text-base">ИИ-консультант курса</h2>
+              <p class="text-[11px] text-gray-500">Отвечает по материалам этого портала</p>
+            </div>
+            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-medium px-2 py-1 rounded border border-emerald-300">Gemini 3 Flash</span>
+          </div>
+          <div id="chat-box" class="flex-grow overflow-y-auto space-y-4 p-4 bg-ivory-50 border border-gray-200 rounded custom-scrollbar text-xs"></div>
+          <div class="mt-4 pt-3 border-t border-gray-200">
+            <form onsubmit="handleChatSubmit(event)" class="flex items-end space-x-2">
+              <textarea id="chat-input" rows="2" placeholder="Спросите о плане, заданиях, литературе или экзаменационных вопросах…" class="flex-grow p-2.5 border border-gray-300 rounded text-xs"></textarea>
+              <button type="submit" id="chat-send-btn" class="px-5 py-3 bg-burgundy-800 hover:bg-burgundy-700 text-white font-serif font-bold text-xs rounded border border-gold-500/50">Отправить</button>
+            </form>
+            <div class="flex justify-between mt-2 text-[10px] text-gray-500">
+              <span>Уточняйте важные детали у преподавателя.</span>
+              <span class="hover:underline cursor-pointer" onclick="initChat()">Очистить диалог</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+</main>
+
+<footer class="bg-navy-950 text-white border-t-2 border-gold-600 mt-12 py-6">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-xs flex flex-col sm:flex-row justify-between gap-2 text-gray-400">
+    <span><b class="text-gold-500">Русский язык · уровень C1</b> — учебный портал курса</span>
+    <span>МИТУ · Кафедра социально-гуманитарных дисциплин и мировых языков · 2025/2026</span>
+  </div>
+</footer>
+
+<script>
+/* ======================= DATA ======================= */
+const MODULES = [
+  { title:"Модуль 1. Функциональные стили речи", weeks:[1,2,3,4] },
+  { title:"Модуль 2. Функционально-смысловые типы речи", weeks:[5,6,7] },
+  { title:"Модуль 3. Типы научной информации", weeks:[8] },
+  { title:"Модуль 4. Структурно-смысловой анализ текста по специальности", weeks:[9,10,11,12,13,14,15] },
+];
+
+const WEEKS = [
+  {n:1, topic:"Язык и его основные функции. Языковая политика РК", srs:"Нормативно-правовые основы языковой политики в Республике Казахстан", hours:5,
+   tasks:["Обзор ключевых документов языковой политики РК: Конституция, Закон «О языках в РК», госпрограммы 2001–2010, 2011–2020, 2023–2029, Концепция развития языковой политики","Международные документы: Декларация принципов толерантности ЮНЕСКО, договоры о правах этнических меньшинств","Практика применения законодательства в образовании, госуправлении, СМИ","Идея языкового триединства в РК: эффективность принципа трёхъязычия"]},
+  {n:2, topic:"Понятие языковой нормы. Функциональные стили языка", srs:"Понятие языковой нормы. Функциональные стили языка", hours:5,
+   tasks:["Определение, критерии и виды языковой нормы. Роль нормы в культуре речи","Влияние интернета и соцсетей на нормы языка","Функциональный стиль: основные стили современного русского языка","Подготовить тексты художественного, разговорного, публицистического и официального стилей (150–200 слов)"]},
+  {n:3, topic:"Официально-деловой стиль. Служебная документация для внутреннего и внешнего пользования", srs:"Служебная документация для внутреннего пользования", hours:5,
+   tasks:["Изучить Типовые правила документирования управления документацией в организациях РК (Постановление №1570)","Подготовить презентацию «Служебная документация для внутреннего пользования»","Сравнить оформление и содержание приказов и распоряжений"]},
+  {n:4, topic:"Научный стиль: языковые и структурные особенности", srs:"Характерные черты научного стиля", hours:5,
+   tasks:["Презентация «Стилистические особенности научного стиля»: подстили, черты, функции, лексика","Обсуждение: может ли научный стиль быть «простым» и «доступным»?","Чем отличается собственно-научный стиль от научно-популярного?"]},
+  {n:5, topic:"Текст как основная единица словесной коммуникации. Признаки текста", srs:"Текст как основная единица словесной коммуникации. Признаки текста", hours:5,
+   tasks:["Подготовить презентацию по теме","Анализ текста: понятие текста, его признаки и роль в коммуникации","Обсуждение: можно ли считать посты в соцсетях полноценными текстами?"]},
+  {n:6, topic:"Функционально-смысловые типы речи: описание, повествование", srs:"Текстовая модель научного описания и научного повествования", hours:5,
+   tasks:["Подобрать текст научного описания/повествования по специальности","Определить цель, языковые особенности, коммуникативные задачи текста","Обсуждение: общие и отличительные черты описания и повествования"]},
+  {n:7, topic:"Функционально-смысловые типы речи: рассуждение", srs:"Текстовая модель научного рассуждения", hours:5,
+   tasks:["Анализ текста научного рассуждения по специальности","Определить тезис, аргументы и вывод рассуждения","Охарактеризовать языковые особенности: терминология, клише, средства связи"]},
+  {n:8, topic:"Типы научной информации в тексте по специальности · 1-я аттестация", srs:"Типы научной информации", hours:5,
+   tasks:["Анализ текста по специальности с точки зрения терминологии","Составить перечень терминологических словарей и справочников","Устное сообщение «Терминология науки» с учётом будущей специальности"]},
+  {n:9, topic:"Структурно-смысловое членение научного текста", srs:"Элементы структурно-семантического анализа текста", hours:5,
+   tasks:["Структурно-смысловой анализ научного текста по специальности","Определить тему, микротему, тезис, аргументы, вывод","Выявить приёмы выделения структурно-смысловых единиц"]},
+  {n:10, topic:"Коммуникативная задача научного текста (КЗТ)", srs:"Коммуникативная задача текста (КЗТ)", hours:5,
+   tasks:["Понятие смыслового центра предложения","Виды КЗТ и связь между задачей текста и структурой рассуждения","Анализ текста с формулированием коммуникативной задачи"]},
+  {n:11, topic:"Тема и микротемы научного текста", srs:"Тема и микротемы научного текста", hours:5,
+   tasks:["Определение темы как главной мысли текста","Микротема как часть общей темы, связь с абзацем","Анализ текста с выделением темы и микротем"]},
+  {n:12, topic:"Данная и новая информация текста. Модель-схема научного текста", srs:"Формы выражения новой информации в тексте", hours:5,
+   tasks:["Понятие данного (темы предложения) и нового (ремы предложения)","Средства выражения: местоимения, повторы vs термины, уточнения","Выделить данное и новое в научном тексте по специальности"]},
+  {n:13, topic:"Способы развития информации: параллельный, цепной способы", srs:"Однонаправленные и разнонаправленные научные тексты", hours:5,
+   tasks:["Типы научных текстов по направленности информации","Развёртывание информации: объяснение, доказательство, сравнение","Построить структурно-смысловую модель текста с параллельным/цепным развитием"]},
+  {n:14, topic:"Основная и дополнительная информация текста. Компрессия. Вторичные тексты", srs:"Правила и приёмы компрессии текста", hours:5,
+   tasks:["Основная и дополнительная информация: виды, функции","Понятие компрессии; вторичные тексты — конспект, план, аннотация, реферат, тезисы","Сократить текст по специальности до 50% без потери смысла"]},
+  {n:15, topic:"План как структурно-смысловой компонент научного текста · 2-я аттестация", srs:"Виды плана: назывной, вопросный, тезисный", hours:5,
+   tasks:["Понятие плана текста: функции, виды, детализация","Составить три вида плана текста по специальности","Сравнить планы и определить, когда каждый удобнее"]},
+];
+
+const OPEN_MATERIALS = [
+  {cat:"Стили речи", title:"Функциональные стили речи: уместность, возведённая в правило", desc:"Обзор пяти функциональных стилей современного русского языка и их границ.", src:"Журнал Грамоты", url:"https://gramota.ru/journal/stati/pravila-i-normy/funktsionalnye-stili-rechi-umestnost-vozvedennaya-v-pravilo"},
+  {cat:"Научный стиль", title:"Что такое научный стиль? Понятие и главные черты", desc:"Разбор лингвистических признаков научного текста на конкретном примере.", src:"Письмовник, Грамота.ру", url:"https://gramota.ru/biblioteka/spravochniki/pismovnik/chto-takoe-nauchnyy-stil"},
+  {cat:"Научный стиль", title:"Научный стиль — краткий теоретический курс", desc:"Жанры научной речи, подстили и их особенности — компактный справочный материал.", src:"Грамота.ру", url:"https://gramota.ru/biblioteka/spravochniki/russkij-yazyk-kratkij-teoreticheskij-kurs-dlya-shkolnikov/nauchnyy-stil"},
+  {cat:"Научный стиль", title:"Научно-популярный стиль речи", desc:"Дискуссия о статусе научно-популярного подстиля среди специалистов по стилистике.", src:"Журнал Грамоты", url:"https://gramota.ru/journal/stati/pravila-i-normy/nauchno-populyarnyy-stil-rechi-nastoyashchaya-nauka-dlya-chaynikov"},
+  {cat:"Научный стиль", title:"Точность научного текста не в ущерб понятности", desc:"Практические советы редактора о балансе точности и ясности изложения.", src:"Журнал Грамоты", url:"https://gramota.ru/journal/stati/pravila-i-normy/nauchnyy-stil-rechi-tochnost-ne-v-ushcherb-ponyatnosti"},
+  {cat:"Официально-деловой стиль", title:"Официально-деловой стиль — теоретический курс", desc:"Жанры и монологические/диалогические формы официально-делового стиля.", src:"Грамота.ру", url:"https://gramota.ru/biblioteka/spravochniki/russkij-yazyk-kratkij-teoreticheskij-kurs-dlya-shkolnikov/ofitsialno-delovoy-stil"},
+  {cat:"Официально-деловой стиль", title:"Официально-деловой стиль: основные черты", desc:"Учебный материал о сферах применения делового стиля и его стилевых чертах.", src:"MOODLE КНИТУ", url:"https://moodle.kstu.ru/mod/book/view.php?id=17769"},
+  {cat:"Официально-деловой стиль", title:"Подстили и жанры официально-делового стиля", desc:"Дипломатический, законодательный и административно-канцелярский подстили с примерами жанров.", src:"Психология и педагогика", url:"https://psyera.ru/podstili-i-zhanry-oficialno-delovogo-stilya_15939.htm"},
+  {cat:"Официально-деловой стиль", title:"Языковые особенности жанров официально-делового стиля", desc:"Канцеляризмы, клише и грамматические конструкции деловых документов.", src:"Психология и педагогика", url:"https://psyera.ru/naznachenie-sfera-funkcionirovaniya-konstruktivnye-i-yazykovye-osobennosti-zhanrov-oficialno_8735"},
+  {cat:"Официально-деловой стиль", title:"Общая характеристика официально-делового стиля", desc:"Научная статья об административно-канцелярском подстиле и его функциях.", src:"КиберЛенинка", url:"https://cyberleninka.ru/article/n/obschaya-harakteristika-ofitsialno-delovogo-stilya"},
+  {cat:"Компрессия текста", title:"Основы компрессии научного текста", desc:"Как раскрытие смысловой структуры текста-первоисточника помогает его сжать.", src:"rusnauka.com", url:"http://www.rusnauka.com/5_SWMN_2018/Philologia/7_232884.doc.htm"},
+  {cat:"Компрессия текста", title:"Аннотация, реферат, конспект, тезисы — различия", desc:"Сравнение вторичных жанров научного текста и их структурных компонентов.", src:"studfile.net", url:"https://studfile.net/preview/9059969/page:5/"},
+  {cat:"Компрессия текста", title:"Виды компрессии первичного текста: план, конспект, аннотация", desc:"Назывной, вопросный и тезисный планы; способы конспектирования текста.", src:"studfile.net", url:"https://studfile.net/preview/9966151/page:5/"},
+  {cat:"Компрессия текста", title:"Правила и приёмы смысловой и языковой компрессии текста", desc:"Операции над текстом-источником для построения конспектов, тезисов и рефератов.", src:"Студенческий научный форум", url:"https://scienceforum.ru/2016/article/2016024418"},
+];
+
+const LIT_MAIN = [
+  {n:1, text:"Русский язык. Учебное пособие для студентов казахских отделений университетов (бакалавриат)", meta:"Под ред. Ахмедьярова К.К., Жаркынбековой Ш.К., Мухамадиева Х.С. — Алматы: Қазақ университеті, 2019 — 223 с.", url:null},
+  {n:2, text:"Русский язык. Учебное пособие для студентов-экономистов", meta:"Чекина Е.Б., Вишнякова С.А., Капасова Д.А. — Алматы: Қазақ университеті, 2021 — 214 с.", url:null},
+  {n:3, text:"Культура речи. Научная речь: учебное пособие для вузов", meta:"Под ред. В.В. Химика, Л.Б. Волковой. — 2-е изд. — М.: Юрайт, 2024 — 270 с.", url:"https://urait.ru/bcode/537732"},
+  {n:4, text:"Русский язык для программистов", meta:"Юрьев А.Н. — Алматы: ТехноЭрудит, 2020 — 256 с.", url:null},
+];
+const LIT_EXTRA = [
+  {n:5, text:"Государственный стандарт по русскому языку как иностранному. Базовый уровень", meta:"Москва – Санкт-Петербург: Златоуст, 2011.", url:null},
+  {n:6, text:"Государственный стандарт по русскому языку как иностранному. Третий сертификационный уровень", meta:"Москва – Санкт-Петербург: Златоуст, 2011.", url:null},
+  {n:7, text:"Русский язык и культура речи. Семнадцать практических занятий", meta:"Под ред. Ганапольской Е.В., Волошиновой Т.Ю. — 2-е изд. — М.: Юрайт, 2024 — 304 с.", url:"https://urait.ru/bcode/541479"},
+  {n:8, text:"Словари и энциклопедии на Академике", meta:"academic.ru", url:"https://academic.ru/"},
+  {n:9, text:"Научная электронная библиотека eLIBRARY.RU", meta:"elibrary.ru", url:"https://elibrary.ru/"},
+];
+
+const GRADES = [
+  ["A","4,0","95–100","Отлично"],["A-","3,67","90–94","Отлично"],
+  ["B+","3,33","85–89","Хорошо"],["B","3,0","80–84","Хорошо"],["B-","2,67","75–79","Хорошо"],
+  ["C+","2,33","70–74","Хорошо"],["C","2,0","65–69","Удовлетворительно"],["C-","1,67","60–64","Удовлетворительно"],
+  ["D+","1,33","55–59","Удовлетворительно"],["D-","1,0","50–54","Удовлетворительно"],
+  ["FX","0,5","25–49","Неудовлетворительно"],["F","0","0–24","Неудовлетворительно"],
+];
+
+const EXAM_QUESTIONS = [
+"Абзац и его структура","Аргументация в научном тексте","Виды и формы речи","Главные правила компрессии текста",
+"Грамматика, лексика и стилистика научного текста","Данная и новая информация научного текста. Способы выражения новой информации в тексте",
+"Идея языкового триединства в Республике Казахстан","Классификация научных текстов по степени самостоятельности",
+"Коммуникативные задачи текста","Композиционно-смысловая структура научного текста",
+"Композиционно-смысловое членение текста. Абзац и заглавное предложение","Композиция дедуктивного рассуждения",
+"Композиция текстов официально-делового стиля","Компрессия как основной вид переработки текста",
+"Методы логической организации научного текста: дедукция, индукция, проблемное изложение, аналогия",
+"Микротема научного текста. Основная и дополнительная информация в тексте",
+"Разновидности (подстили) научного стиля речи. Жанры научной прозы",
+"Научная информация и её источники. Работа с источниками информации","Научное описание как тип научной речи",
+"Научное повествование как тип научной речи","Научное рассуждение как тип научной речи",
+"Научный стиль: стилеобразующие черты и языковые средства организации",
+"Нормативно-правовые основы языковой политики в Республике Казахстан","Общая характеристика научного стиля",
+"Общая характеристика научной статьи как жанра научного стиля","Общая характеристика официально-делового стиля",
+"Общая характеристика сферы научной информации","Общая характеристика тезисов как ведущего жанра научного стиля",
+"Однонаправленные и разнонаправленные научные тексты","Основные жанры научного стиля. Первичные и вторичные жанры научной речи",
+"Основные лингвистические черты научной речи",
+"Основные черты учебно-научного текста. Языковые средства организации учебно-научного текста",
+"Основы компрессии научного текста. Вторичные научные тексты","Особенности научного текста и законы его построения",
+"План как структурно-содержательный компонент научного текста","Подстили и основные жанровые разновидности научного стиля речи",
+"Правила и приёмы компрессии текста","Реквизиты и композиционная схема заявления, докладной записки",
+"Роль утверждения (тезиса) в научном тексте","Служебная документация для внешнего пользования. Виды писем",
+"Служебная документация для внутреннего пользования: приказы и распоряжения",
+"Служебная документация: виды документов, требования к языковым средствам и стилю изложения",
+"Способы развития информации в тексте. Роль предложения в тексте. Типы связи между предложениями (цепная, параллельная)",
+"Способы распространения темы (детализация, приведение примеров, объяснение тезиса и др.)",
+"Структурно-смысловой анализ научного текста","Текст и его основные признаки","Текстовая модель научного описания",
+"Текстовые и языковые нормы официально-делового стиля",
+"Тема и коммуникативная задача научного текста. Способы определения коммуникативной задачи текста",
+"Технология создания логической схемы научного текста","Типы плана текста",
+"Типы речи современного русского литературного языка: описание, повествование, рассуждение, их отличительные особенности",
+"Требования к правильному построению абзаца","Учебно-научный текст как основная единица учебно-научной коммуникации",
+"Функциональные стили современного русского языка. Понятие языковой нормы","Цели и задачи научной коммуникации",
+"Элементы структурно-семантического анализа текста","Язык и его основные функции","Языковая политика РК",
+];
+
+/* Real, working sources for each book: Russian Wikisource author/work pages
+   (each offers a "Скачать EPUB / MOBI / PDF" tool in the sidebar once opened)
+   and, for Bulgakov (whose Russian-domain public-domain status was only
+   confirmed in 2025), a long-running academic Bulgakov archive with a direct
+   PDF of the full Russian text. */
+const BOOKS = [
+  {author:"А. С. Пушкин", title:"Евгений Онегин", year:"1833",
+   desc:"Роман в стихах — образец гибкого литературного языка и лёгкого, разговорного по духу повествования.",
+   url:"https://ru.wikisource.org/wiki/Евгений_Онегин_(Пушкин)", src:"Викитека — читать и скачать (EPUB/PDF)"},
+  {author:"Н. В. Гоголь", title:"Мёртвые души", year:"1842",
+   desc:"Богатейшая описательная проза и яркая портретная характеристика персонажей российской провинции.",
+   url:"https://ru.wikisource.org/wiki/Мёртвые_души_(Гоголь)", src:"Викитека — читать и скачать (EPUB/PDF)"},
+  {author:"И. С. Тургенев", title:"Отцы и дети", year:"1862",
+   desc:"Ясный, точный слог и диалоги, показывающие разговорный и публицистический пласты языка XIX века.",
+   url:"https://ru.wikisource.org/wiki/Иван_Сергеевич_Тургенев", src:"Викитека, страница автора — открыть «Отцы и дети»"},
+  {author:"Ф. М. Достоевский", title:"Преступление и наказание", year:"1866",
+   desc:"Сложный синтаксис и психологическое повествование — хороший материал для анализа рассуждения.",
+   url:"https://ru.wikisource.org/wiki/Автор:Фёдор_Михайлович_Достоевский", src:"Викитека, страница автора — открыть «Преступление и наказание»"},
+  {author:"Л. Н. Толстой", title:"Война и мир", year:"1869",
+   desc:"Масштабный роман с образцами разных стилей речи: от бытового диалога до военной документации.",
+   url:"https://ru.wikisource.org/wiki/Лев_Николаевич_Толстой", src:"Викитека, страница автора — открыть «Война и мир»"},
+  {author:"А. П. Чехов", title:"Рассказы", year:"1880-е–1900-е",
+   desc:"Короткая проза с лаконичным, отточенным языком — удобна для разбора текста и компрессии.",
+   url:"https://ru.wikisource.org/wiki/Антон_Павлович_Чехов", src:"Викитека, страница автора — весь корпус рассказов"},
+  {author:"М. Ю. Лермонтов", title:"Герой нашего времени", year:"1840",
+   desc:"Один из первых психологических романов; разнообразие повествовательных форм — дневник, новелла.",
+   url:"https://ru.wikisource.org/wiki/Герой_нашего_времени_(Лермонтов)", src:"Викитека — читать и скачать (EPUB/PDF)"},
+  {author:"М. А. Булгаков", title:"Мастер и Маргарита", year:"1966–67",
+   desc:"Смешение стилей — от сатиры до философской притчи — прекрасный пример стилевого разнообразия.",
+   url:"https://masterandmargarita.eu/ru/06links/eigen.html", src:"Академический архив masterandmargarita.eu — полный текст, PDF"},
+];
+
+
+const GEMINI_API_KEY = "AQ.Ab8RN6LDpFZ5MCgWakrJB4ryj6ype83biiWvg5M3A7yx3sLNXQ";
+const TABS = [
+  ['home','Главная','fa-landmark'],['plan','План','fa-scroll'],['materials','Материалы','fa-book-bookmark'],
+  ['literature','Литература','fa-book'],['exam','Экзамен','fa-award'],['books','Книги','fa-book-open'],['assistant','ИИ-консультант','fa-robot']
+];
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function switchTab(id){
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+  $('tab-'+id).classList.remove('hidden');
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    const on = b.dataset.tab === id;
+    b.classList.toggle('bg-burgundy-800', on); b.classList.toggle('text-white', on);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderChrome(){
+  $('navbar').innerHTML = TABS.map(t => `<button data-tab="${t[0]}" onclick="switchTab('${t[0]}')" class="nav-btn px-4 py-2 rounded-t font-medium flex items-center space-x-2 text-ivory-100 hover:text-gold-500 transition whitespace-nowrap"><i class="fa-solid ${t[2]} text-xs"></i><span>${t[1]}</span></button>`).join('');
+  $('side-nav').innerHTML = TABS.slice(1,6).map(t => `<a href="javascript:void(0)" onclick="switchTab('${t[0]}')" class="block p-3 hover:bg-ivory-200 transition text-navy-900 font-medium">${t[1]}</a>`).join('');
+}
+
+function renderPlan(){
+  $('plan-root').innerHTML = MODULES.map((m,mi) => `
+    <div>
+      <h3 class="font-serif font-bold text-navy-900 text-sm mb-2"><span class="text-burgundy-800">${mi+1}.</span> ${esc(m.title)}</h3>
+      <div class="space-y-2">${m.weeks.map(n => { const w = WEEKS.find(x => x.n === n); return `
+        <details class="border border-gray-200 rounded overflow-hidden">
+          <summary class="cursor-pointer p-3 flex items-center gap-3 bg-ivory-100 hover:bg-ivory-200">
+            <span class="text-[10px] font-bold bg-navy-900 text-gold-500 px-2 py-1 rounded whitespace-nowrap">Неделя ${w.n}</span>
+            <span class="flex-1"><span class="block font-serif font-semibold text-navy-900 text-sm">${esc(w.topic)}</span><span class="block text-[11px] text-gray-500">СРС: ${esc(w.srs)} · ${w.hours} ч.</span></span>
+          </summary>
+          <div class="p-4 bg-white border-t border-gray-200 text-xs">
+            <p class="font-semibold text-navy-900 mb-1">Задания СРС / СРСП</p>
+            <ul class="list-disc pl-5 space-y-1 text-gray-600">${w.tasks.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+          </div>
+        </details>`; }).join('')}</div>
+    </div>`).join('');
+}
+function togglePlan(open){ document.querySelectorAll('#plan-root details').forEach(d => d.open = open); }
+
+function renderMaterials(cat){
+  const cats = ['Все', ...new Set(OPEN_MATERIALS.map(x => x.cat))];
+  $('mat-chips').innerHTML = cats.map(c => `<button onclick="renderMaterials('${esc(c)}')" class="px-3 py-1.5 rounded ${(cat||'Все')===c ? 'bg-navy-900 text-white' : 'border border-gray-300 text-gray-700 hover:bg-gray-100'}">${esc(c)}</button>`).join('');
+  const items = (!cat || cat === 'Все') ? OPEN_MATERIALS : OPEN_MATERIALS.filter(x => x.cat === cat);
+  $('mat-root').innerHTML = items.map(m => `
+    <a href="${esc(m.url)}" target="_blank" rel="noopener" class="block p-4 border border-gray-200 rounded bg-white hover:border-gold-600 transition">
+      <span class="text-[10px] font-bold text-burgundy-800 uppercase tracking-wider">${esc(m.cat)}</span>
+      <h4 class="font-serif font-bold text-navy-900 text-sm mt-1">${esc(m.title)}</h4>
+      <p class="text-xs text-gray-600 mt-1">${esc(m.desc)}</p>
+      <p class="text-[11px] text-navy-900 font-semibold mt-2">${esc(m.src)} <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></p>
+    </a>`).join('');
+}
+
+function renderLit(){
+  const mk = arr => arr.map(l => `
+    <div class="p-4 border border-gray-200 rounded bg-white flex gap-4">
+      <div class="font-serif font-bold text-gold-600 text-lg w-6 flex-shrink-0">${l.n}</div>
+      <div class="text-xs"><b class="font-serif text-navy-900 text-sm">${esc(l.text)}</b>
+        <div class="text-gray-600 mt-1">${esc(l.meta)}</div>
+        ${l.url ? `<a href="${esc(l.url)}" target="_blank" rel="noopener" class="text-burgundy-800 font-semibold hover:underline inline-block mt-1">Открыть источник</a>` : ''}
+      </div>
+    </div>`).join('');
+  $('lit-main').innerHTML = mk(LIT_MAIN); $('lit-extra').innerHTML = mk(LIT_EXTRA);
+}
+
+function progGet(){ try { return JSON.parse(localStorage.getItem('examProgress') || '{}'); } catch(e){ return {}; } }
+function progSet(s){ try { localStorage.setItem('examProgress', JSON.stringify(s)); } catch(e){} }
+function updateProgress(){
+  const done = Object.values(progGet()).filter(Boolean).length, total = EXAM_QUESTIONS.length, pct = total ? done/total*100 : 0;
+  $('exam-bar').style.width = pct+'%'; $('side-progress-bar').style.width = pct+'%';
+  $('exam-text').textContent = `${done} / ${total} отмечено как изучено`;
+  $('side-progress-text').textContent = `${done} / ${total}`;
+}
+function renderExam(){
+  $('grades-body').innerHTML = GRADES.map(g => `<tr><td class="p-2 font-bold">${g[0]}</td><td class="p-2">${g[1]}</td><td class="p-2">${g[2]}</td><td class="p-2">${g[3]}</td></tr>`).join('');
+  const saved = progGet();
+  $('exam-root').innerHTML = EXAM_QUESTIONS.map((q,i) => `<tr class="${saved[i] ? 'bg-emerald-50' : ''}"><td class="p-2 text-gray-500">${i+1}</td><td class="p-2 text-gray-800">${esc(q)}</td><td class="p-2 text-center"><input type="checkbox" data-i="${i}" ${saved[i] ? 'checked' : ''} aria-label="Вопрос ${i+1} изучен" class="h-4 w-4 cursor-pointer"></td></tr>`).join('');
+  $('exam-root').querySelectorAll('input').forEach(cb => cb.addEventListener('change', () => {
+    const s = progGet(); s[cb.dataset.i] = cb.checked; progSet(s);
+    cb.closest('tr').classList.toggle('bg-emerald-50', cb.checked); updateProgress();
+  }));
+  updateProgress();
+}
+
+function renderBooks(){
+  $('books-root').innerHTML = BOOKS.map(b => `
+    <div class="p-4 border border-gray-200 rounded bg-white flex gap-4">
+      <div class="text-[11px] text-gray-500 w-20 flex-shrink-0">${esc(b.year)}</div>
+      <div class="text-xs"><b class="font-serif text-navy-900 text-sm">${esc(b.title)}</b>
+        <div class="text-gray-600">${esc(b.author)}</div>
+        <p class="text-gray-700 mt-1">${esc(b.desc)}</p>
+        <a href="${esc(b.url)}" target="_blank" rel="noopener" class="text-burgundy-800 font-semibold hover:underline inline-block mt-1">Читать / скачать</a>
+        <div class="text-[10px] text-gray-500">${esc(b.src)}</div>
+      </div>
+    </div>`).join('');
+}
+
+/* ---------- ИИ-консультант (Gemini), ответы только по данным курса ---------- */
+function courseContext(){
+  const L = ['Курс: «Русский язык», уровень C1, МИТУ. Преподаватель: Тукебаева Жаныл Аубакировна. ECTS: 5. Семестр: осенний 2025/2026. Контроль: экзамен. Формула: И = 0,6×РКср + 0,4×Э.', '', 'ПЛАН:'];
+  MODULES.forEach((m,i) => { L.push(`${i+1}. ${m.title}`); m.weeks.forEach(n => { const w = WEEKS.find(x => x.n === n); L.push(`  Неделя ${w.n} — ${w.topic}. СРС: ${w.srs} (${w.hours} ч.)`); w.tasks.forEach(t => L.push(`    · ${t}`)); }); });
+  L.push('', 'ИСТОЧНИКИ:'); OPEN_MATERIALS.forEach(m => L.push(`- [${m.cat}] ${m.title} — ${m.desc}`));
+  L.push('', 'ЛИТЕРАТУРА:'); [...LIT_MAIN, ...LIT_EXTRA].forEach(l => L.push(`- ${l.text} (${l.meta})`));
+  L.push('', 'ШКАЛА:'); GRADES.forEach(g => L.push(`${g[0]} = ${g[1]}, ${g[2]}% — ${g[3]}`));
+  L.push('', 'ЭКЗАМЕНАЦИОННЫЕ ВОПРОСЫ:'); EXAM_QUESTIONS.forEach((q,i) => L.push(`${i+1}. ${q}`));
+  L.push('', 'КНИГИ:'); BOOKS.forEach(b => L.push(`- ${b.author}, «${b.title}» (${b.year})`));
+  return L.join('\n');
+}
+const SYSTEM_PROMPT = `Ты — ИИ-консультант учебного портала курса «Русский язык, уровень C1» (МИТУ). Отвечай только на основе данных курса ниже. Если ответа в них нет, честно скажи об этом и не выдумывай. Если вопрос не по курсу, вежливо верни разговор к теме курса. Отвечай по-русски, кратко, указывая номер недели или раздел портала.\n\nДАННЫЕ КУРСА:\n`;
+
+function botBubble(html){ return `<div class="flex items-start space-x-3"><div class="w-8 h-8 rounded-full bg-navy-900 text-gold-500 flex items-center justify-center flex-shrink-0 text-xs font-serif font-bold">C1</div><div class="bg-white p-3.5 rounded-r-lg rounded-bl-lg border border-gray-200 shadow-sm max-w-[85%] leading-relaxed text-gray-700 whitespace-pre-wrap">${html}</div></div>`; }
+function initChat(){ $('chat-box').innerHTML = botBubble('Здравствуйте! Спросите о плане курса, заданиях СРС/СРСП, литературе, источниках, экзаменационных вопросах или книгах для чтения.'); }
+function addMsg(role, text){
+  const box = $('chat-box'), d = document.createElement('div');
+  d.innerHTML = role === 'user'
+    ? `<div class="flex justify-end"><div class="bg-navy-900 text-ivory-50 p-3.5 rounded-l-lg rounded-br-lg max-w-[85%] leading-relaxed whitespace-pre-wrap">${esc(text)}</div></div>`
+    : botBubble(esc(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'));
+  box.appendChild(d); box.scrollTop = box.scrollHeight; return d;
+}
+async function handleChatSubmit(e){
+  e.preventDefault();
+  const input = $('chat-input'), text = input.value.trim(), btn = $('chat-send-btn');
+  if (!text) return;
+  addMsg('user', text); input.value = ''; btn.disabled = true;
+  const loading = addMsg('ai', 'Анализирую материалы курса…');
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ contents: [{parts:[{text}]}], systemInstruction: {parts:[{text: SYSTEM_PROMPT + courseContext()}]} })
+    });
+    const data = await res.json();
+    loading.remove();
+    addMsg('ai', data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Не удалось получить ответ. Попробуйте ещё раз.');
+  } catch (err) {
+    loading.remove(); addMsg('ai', 'Нет соединения с ИИ-консультантом. Проверьте подключение.');
+  } finally { btn.disabled = false; }
+}
+
+window.onload = () => { renderChrome(); renderPlan(); renderMaterials(null); renderLit(); renderExam(); renderBooks(); initChat(); switchTab('home'); };
+</script>
+</body>
+</html>
