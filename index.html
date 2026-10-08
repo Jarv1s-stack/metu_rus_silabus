@@ -83,6 +83,9 @@
             background: #c5a05980;
             border-radius: 3px;
         }
+        .presentation-btn {
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between custom-scrollbar">
@@ -182,7 +185,7 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-200 pb-4 mb-6">
             <div>
               <h2 class="text-2xl font-serif font-bold text-navy-900">Календарно-тематический план</h2>
-              <p class="text-xs text-gray-600">15 недель · 4 модуля. Откройте неделю, чтобы увидеть задания СРС/СРСП.</p>
+              <p class="text-xs text-gray-600">15 недель · 4 модуля. Откройте неделю, чтобы увидеть задания СРС/СРСП и презентацию по теме.</p>
             </div>
             <div class="mt-2 sm:mt-0 flex space-x-2">
               <button onclick="togglePlan(true)" class="text-xs px-3 py-1.5 border border-gray-300 rounded text-navy-900 hover:bg-gray-100">Раскрыть все</button>
@@ -460,7 +463,19 @@ function renderPlan(){
         <details class="border border-gray-200 rounded overflow-hidden">
           <summary class="cursor-pointer p-3 flex items-center gap-3 bg-ivory-100 hover:bg-ivory-200">
             <span class="text-[10px] font-bold bg-navy-900 text-gold-500 px-2 py-1 rounded whitespace-nowrap">Неделя ${w.n}</span>
-            <span class="flex-1"><span class="block font-serif font-semibold text-navy-900 text-sm">${esc(w.topic)}</span><span class="block text-[11px] text-gray-500">СРС: ${esc(w.srs)} · ${w.hours} ч.</span></span>
+            <span class="flex-1">
+              <span class="block font-serif font-semibold text-navy-900 text-sm">${esc(w.topic)}</span>
+              <span class="block text-[11px] text-gray-500">СРС: ${esc(w.srs)} · ${w.hours} ч.</span>
+            </span>
+            <a href="presentations/${w.n}.pdf"
+               target="_blank"
+               rel="noopener"
+               onclick="event.stopPropagation()"
+               class="presentation-btn inline-flex items-center gap-1.5 text-[11px] font-semibold text-burgundy-800 border border-burgundy-800/30 rounded px-2.5 py-1.5 hover:bg-burgundy-800 hover:text-white transition whitespace-nowrap"
+               title="Открыть презентацию по теме">
+              <i class="fa-solid fa-display text-[10px]"></i>
+              Презентация
+            </a>
           </summary>
           <div class="p-4 bg-white border-t border-gray-200 text-xs">
             <p class="font-semibold text-navy-900 mb-1">Задания СРС / СРСП</p>
