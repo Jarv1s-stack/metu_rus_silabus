@@ -263,7 +263,12 @@
           <div id="chat-box" class="flex-grow overflow-y-auto space-y-4 p-4 bg-ivory-50 border border-gray-200 rounded custom-scrollbar text-xs"></div>
           <div class="mt-4 pt-3 border-t border-gray-200">
             <form onsubmit="handleChatSubmit(event)" class="flex items-end space-x-2">
-              <textarea id="chat-input" rows="2" placeholder="Спросите о плане, заданиях, литературе или экзаменационных вопросах…" class="flex-grow p-2.5 border border-gray-300 rounded text-xs"></textarea>
+              <textarea id="chat-input" 
+          rows="2" 
+          placeholder="Спросите о плане, заданиях, литературе или экзаменационных вопросах…" 
+          class="flex-grow p-2.5 border border-gray-300 rounded text-xs"
+          onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); document.getElementById('chat-send-btn').click(); }">
+</textarea>
               <button type="submit" id="chat-send-btn" class="px-5 py-3 bg-burgundy-800 hover:bg-burgundy-700 text-white font-serif font-bold text-xs rounded border border-gold-500/50">Отправить</button>
             </form>
             <div class="flex justify-between mt-2 text-[10px] text-gray-500">
@@ -279,9 +284,10 @@
 </main>
 
 <footer class="bg-navy-950 text-white border-t-2 border-gold-600 mt-12 py-6">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-xs flex flex-col sm:flex-row justify-between gap-2 text-gray-400">
+  <div class="max-w-auto mx-auto px-4 sm:px-6 lg:px-8 text-xs flex flex-col sm:flex-row justify-between text-gray-400">
     <span><b class="text-gold-500">Русский язык · уровень C1</b> — учебный портал курса</span>
-    <span>МИТУ · Кафедра социально-гуманитарных дисциплин и мировых языков · 2025/2026</span>
+    <span>МИТУ · Кафедра социально-гуманитарных дисциплин и мировых языков · 2026/2027</span>
+    <span>Developed by Abdimutalip Ayan · Number: +7 705 213 00 76 </span>
   </div>
 </footer>
 
@@ -437,7 +443,7 @@ const BOOKS = [
 
 
 /* ---------- OpenRouter (без собственного сервера: запросы идут прямо из браузера) ---------- */
-const OPENROUTER_API_KEY = "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";
+const OPENROUTER_API_KEY = "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";
 const OPENROUTER_MODEL = "nvidia/nemotron-3.5-lightning:free";
 
 /* ======================= СИЛЛАБУСЫ (1 — осенний, 2 — весенний) ======================= */
