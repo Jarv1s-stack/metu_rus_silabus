@@ -442,13 +442,12 @@ const BOOKS = [
 ];
 
 
-/* ---------- OpenRouter (без собственного сервера: запросы идут прямо из браузера) ---------- */
-const OPENROUTER_API_KEY = "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";
-const OPENROUTER_MODEL = "nvidia/nemotron-3.5-lightning:free";
+/* ---------- AI: запросы идут через защищённую Vercel Function ---------- */
+const AI_ENDPOINT = '/api/chat';
 
 /* ======================= СИЛЛАБУСЫ (1 — осенний, 2 — весенний) ======================= */
 const SYL1 = {
-  id: 1, label: 'Силлабус 1 · осенний', progKey: 'examProgress', hasPres: true,
+  id: 1, label: 'Силлабус 1 · осенний', progKey: 'examProgress', hasPres: false, presentations: {},
   tasksTitle: 'Задания СРС / СРСП',
   ctxHeader: 'Курс: «Русский язык», уровень C1, МИТУ. Преподаватель: Тукебаева Жаныл Аубакировна. ECTS: 5. Семестр: осенний 2025/2026. Контроль: экзамен. Формула: И = 0,6×РКср + 0,4×Э.',
   modules: MODULES, weeks: WEEKS, materials: OPEN_MATERIALS, litMain: LIT_MAIN, litExtra: LIT_EXTRA, exam: EXAM_QUESTIONS,
@@ -535,7 +534,7 @@ const SYL2_LIT_EXTRA = [
 ];
 
 const SYL2 = {
-  id: 2, label: 'Силлабус 2 · весенний', progKey: 'examProgress2', hasPres: false,
+  id: 2, label: 'Силлабус 2 · весенний', progKey: 'examProgress2', hasPres: false, presentations: {},
   tasksTitle: 'Содержание СРС',
   ctxHeader: 'Курс: «Казахский (русский) язык» — «Русский язык», уровень C1, МИТУ (силлабус 2, 1 курс, весенний семестр 2025/2026). Преподаватель: Тукебаева Жаныл Аубакировна. ECTS: 5. Практические занятия — 45 ч.; СРСП — 3 ч. и СРС — 4 ч. на каждую тему недели. Пререквизит: курс «Русский язык» (осенний семестр). Контроль: письменный экзамен. Формула: И = 0,6×РКср + 0,4×Э.',
   modules: SYL2_MODULES, weeks: SYL2_WEEKS,
@@ -609,7 +608,7 @@ function renderPlan(){
               <span class="block font-serif font-semibold text-navy-900 text-sm">${esc(w.topic)}</span>
               <span class="block text-[11px] text-gray-500">СРС: ${esc(w.srs)} · ${w.hours} ч.${w.srsp ? ` · СРСП ${w.srsp} ч.` : ''}</span>
             </span>
-            ${S.hasPres ? `<a href="${w.n}.pdf"
+            ${S.presentations && S.presentations[w.n] ? `<a href="${esc(S.presentations[w.n])}"
                target="_blank"
                rel="noopener"
                onclick="event.stopPropagation()"
@@ -689,22 +688,60 @@ function renderBooks(){
 }
 
 /* ---------- ИИ-консультант (OpenRouter), ответы только по данным курса ---------- */
-function courseContext(){
-  const L = [S.ctxHeader, '', 'ПЛАН:'];
-  MODULES.forEach((m,i) => { L.push(`${i+1}. ${m.title}`); m.weeks.forEach(n => { const w = WEEKS.find(x => x.n === n); L.push(`  Неделя ${w.n} — ${w.topic}. СРС: ${w.srs} (${w.hours} ч.${w.srsp ? ', СРСП ' + w.srsp + ' ч.' : ''})`); w.tasks.forEach(t => L.push(`    · ${t}`)); if (w.essays && w.essays.length) { L.push('    Темы эссе (по выбору):'); w.essays.forEach(t => L.push(`    – ${t}`)); } }); });
-  if (S.rk && S.rk.length) { L.push('', 'РУБЕЖНЫЙ КОНТРОЛЬ:'); S.rk.forEach(t => L.push(`- ${t}`)); }
-  L.push('', 'ИСТОЧНИКИ:'); OPEN_MATERIALS.forEach(m => L.push(`- [${m.cat}] ${m.title} — ${m.desc}`));
-  L.push('', 'ЛИТЕРАТУРА:'); [...LIT_MAIN, ...LIT_EXTRA].forEach(l => L.push(`- ${l.text} (${l.meta})`));
-  L.push('', 'ШКАЛА:'); GRADES.forEach(g => L.push(`${g[0]} = ${g[1]}, ${g[2]}% — ${g[3]}`));
-  L.push('', 'ЭКЗАМЕНАЦИОННЫЕ ВОПРОСЫ:'); EXAM_QUESTIONS.forEach((q,i) => L.push(`${i+1}. ${q}`));
-  L.push('', 'КНИГИ:'); BOOKS.forEach(b => L.push(`- ${b.author}, «${b.title}» (${b.year})`));
-  return L.join('\n');
+function syllabusContext(syllabus){
+  const L = [syllabus.ctxHeader, '', 'КАЛЕНДАРНО-ТЕМАТИЧЕСКИЙ ПЛАН:'];
+  (syllabus.modules || []).forEach((m, i) => {
+    L.push(`${i + 1}. ${m.title}`);
+    (m.weeks || []).forEach(n => {
+      const w = (syllabus.weeks || []).find(x => x.n === n);
+      if (!w) return;
+      L.push(`  Неделя ${w.n} — ${w.topic}. СРС: ${w.srs} (${w.hours} ч.${w.srsp ? ', СРСП ' + w.srsp + ' ч.' : ''})`);
+      (w.tasks || []).forEach(t => L.push(`    · ${t}`));
+      if (w.essays && w.essays.length) {
+        L.push('    Темы эссе (по выбору):');
+        w.essays.forEach(t => L.push(`    – ${t}`));
+      }
+    });
+  });
+  if (syllabus.rk && syllabus.rk.length) {
+    L.push('', 'РУБЕЖНЫЙ КОНТРОЛЬ:');
+    syllabus.rk.forEach(t => L.push(`- ${t}`));
+  }
+  L.push('', 'ИСТОЧНИКИ:');
+  (syllabus.materials || []).forEach(m => L.push(`- [${m.cat}] ${m.title} — ${m.desc}`));
+  L.push('', 'ОСНОВНАЯ ЛИТЕРАТУРА:');
+  (syllabus.litMain || []).forEach(l => L.push(`- ${l.text} (${l.meta})`));
+  L.push('', 'ДОПОЛНИТЕЛЬНАЯ ЛИТЕРАТУРА:');
+  (syllabus.litExtra || []).forEach(l => L.push(`- ${l.text} (${l.meta})`));
+  L.push('', 'ЭКЗАМЕНАЦИОННЫЕ ВОПРОСЫ:');
+  (syllabus.exam || []).forEach((q, i) => L.push(`${i + 1}. ${q}`));
+  return L.join('\\n');
 }
 
-const SYSTEM_PROMPT = `Ты — ИИ-консультант учебного портала курса «Русский язык, уровень C1» (МИТУ). Отвечай только на основе данных курса ниже. Если ответа в них нет, честно скажи об этом и не выдумывай. Если вопрос не по курсу, вежливо верни разговор к теме курса. Отвечай по-русски, кратко, указывая номер недели или раздел портала.\n\nДАННЫЕ КУРСА:\n`;
+function courseContext(){
+  return [
+    'БАЗА ЗНАНИЙ: ДВА СИЛЛАБУСА METU',
+    'Используй оба набора данных. Не смешивай недели и задания разных силлабусов.',
+    'СИЛЛАБУС 1 — ОСЕННИЙ СЕМЕСТР:',
+    syllabusContext(SYL1),
+    '',
+    'СИЛЛАБУС 2 — ВЕСЕННИЙ СЕМЕСТР:',
+    syllabusContext(SYL2),
+    '',
+    'ОБЩИЕ ДАННЫЕ:',
+    'Шкала оценок:',
+    ...GRADES.map(g => `${g[0]} = ${g[1]}, ${g[2]}% — ${g[3]}`),
+    'Книги:',
+    ...BOOKS.map(b => `- ${b.author}, «${b.title}» (${b.year})`)
+  ].join('\\n');
+}
+
+const SYSTEM_PROMPT = `Ты — ИИ-консультант учебного портала METU. В твоей базе есть два отдельных силлабуса по русскому языку уровня C1: осенний и весенний.
+Отвечай по данным обоих силлабусов, но не смешивай их темы, недели, задания и экзаменационные вопросы. Определи силлабус по формулировке вопроса; если это невозможно, уточни, о каком семестре или силлабусе идёт речь.
+Не выдумывай факты, темы, часы, даты и требования. Если нужной информации нет в базе, прямо скажи об этом. По возможности указывай название силлабуса, номер недели и соответствующий раздел. Отвечай на языке пользователя, по умолчанию — по-русски. Если вопрос не относится к учебному порталу, вежливо верни разговор к материалам курса.`;
 
 function botBubble(html){ return `<div class="flex items-start space-x-3"><div class="w-8 h-8 rounded-full bg-navy-900 text-gold-500 flex items-center justify-center flex-shrink-0 text-xs font-serif font-bold">C1</div><div class="bg-white p-3.5 rounded-r-lg rounded-bl-lg border border-gray-200 shadow-sm max-w-[85%] leading-relaxed text-gray-700 whitespace-pre-wrap">${html}</div></div>`; }
-function initChat(){ $('chat-box').innerHTML = botBubble('Здравствуйте! Спросите о плане курса, заданиях СРС/СРСП, литературе, источниках, экзаменационных вопросах или книгах для чтения.'); }
+function initChat(){ $('chat-box').innerHTML = botBubble('Здравствуйте! Я знаю оба силлабуса METU: осенний и весенний. Могу помочь с темами, заданиями СРС/СРСП, литературой и экзаменационными вопросами. Укажите семестр, если вопрос относится к конкретному силлабусу.'); }
 function addMsg(role, text){
   const box = $('chat-box'), d = document.createElement('div');
   d.innerHTML = role === 'user'
@@ -714,34 +751,34 @@ function addMsg(role, text){
 }
 async function handleChatSubmit(e){
   e.preventDefault();
-  const input = $('chat-input'), text = input.value.trim(), btn = $('chat-send-btn');
-  if (!text) return;
-  addMsg('user', text); input.value = ''; btn.disabled = true;
-  const loading = addMsg('ai', 'Анализирую материалы курса…');
+  const input = $('chat-input'), message = input.value.trim(), btn = $('chat-send-btn');
+  if (!message) return;
+  addMsg('user', message);
+  input.value = '';
+  btn.disabled = true;
+  const loading = addMsg('ai', 'Подключаю ИИ-консультанта…');
   try {
-    const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + OPENROUTER_API_KEY, 'X-Title': 'METU Russian C1 portal' };
-    if (location.protocol.startsWith('http')) headers['HTTP-Referer'] = location.origin;
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST', headers,
-      body: JSON.stringify({
-        model: OPENROUTER_MODEL,
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT + courseContext() },
-          { role: 'user', content: text }
-        ]
-      })
+    const res = await fetch(AI_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, context: courseContext() })
     });
     const data = await res.json().catch(() => ({}));
     loading.remove();
     if (!res.ok) {
-      const msg = res.status === 429 ? 'Бесплатная модель сейчас перегружена (лимит запросов). Подождите минуту и повторите.' : ('Ошибка ИИ-консультанта' + (data?.error?.message ? ': ' + data.error.message : ' (' + res.status + ')') + '.');
-      addMsg('ai', msg);
+      const errorText = data?.error || (res.status === 429
+        ? 'Бесплатная модель временно достигла лимита запросов. Повторите позже.'
+        : `Не удалось получить ответ от ИИ (код ${res.status}).`);
+      addMsg('ai', errorText);
     } else {
-      addMsg('ai', (data?.choices?.[0]?.message?.content || '').trim() || 'Не удалось получить ответ. Попробуйте ещё раз.');
+      addMsg('ai', (data?.answer || '').trim() || 'ИИ вернул пустой ответ. Попробуйте переформулировать вопрос.');
     }
   } catch (err) {
-    loading.remove(); addMsg('ai', 'Нет соединения с ИИ-консультантом. Проверьте подключение.');
-  } finally { btn.disabled = false; }
+    loading.remove();
+    addMsg('ai', 'Не удалось подключиться к серверу ИИ. Проверьте, что сайт открыт через Vercel и API-функция настроена.');
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 window.onload = () => {
