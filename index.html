@@ -640,14 +640,16 @@ function renderPlan(){
               <span class="block font-serif font-semibold text-navy-900 text-sm">${esc(w.topic)}</span>
               <span class="block text-[11px] text-gray-500">СРС: ${esc(w.srs)} · ${w.hours} ч.${w.srsp ? ` · СРСП ${w.srsp} ч.` : ''}</span>
             </span>
-            ${S.presentations && S.presentations[w.n] ? `<a href="${esc(S.presentations[w.n])}"
+            ${S.presentations && S.presentations[w.n] ? `<a href="#"
+               data-presentation-href="${esc(S.presentations[w.n])}"
+               aria-disabled="true"
                target="_blank"
                rel="noopener"
-               onclick="event.stopPropagation()"
-               class="presentation-btn inline-flex items-center gap-1.5 text-[11px] font-semibold text-burgundy-800 border border-burgundy-800/30 rounded px-2.5 py-1.5 hover:bg-burgundy-800 hover:text-white transition whitespace-nowrap"
-               title="Открыть презентацию по теме">
+               onclick="if(this.getAttribute('aria-disabled') !== 'false') event.preventDefault(); event.stopPropagation();"
+               class="presentation-link presentation-btn inline-flex items-center gap-1.5 text-[11px] font-semibold text-gray-500 border border-gray-300 rounded px-2.5 py-1.5 opacity-60 cursor-wait whitespace-nowrap"
+               title="Проверка файла презентации">
               <i class="fa-solid fa-display text-[10px]"></i>
-              Презентация
+              <span>Проверка файла…</span>
             </a>` : ''}
           </summary>
           <div class="p-4 bg-white border-t border-gray-200 text-xs">
@@ -658,6 +660,34 @@ function renderPlan(){
           </div>
         </details>`; }).join('')}</div>
     </div>`).join('');
+  checkPresentationLinks();
+}
+
+async function checkPresentationLinks(){
+  const links = Array.from(document.querySelectorAll('.presentation-link'));
+  await Promise.all(links.map(async link => {
+    const path = link.dataset.presentationHref;
+    const label = link.querySelector('span');
+    try {
+      const response = await fetch(path, { method: 'HEAD', cache: 'no-store' });
+      if (response.ok) {
+        link.href = path;
+        link.setAttribute('aria-disabled', 'false');
+        link.classList.remove('opacity-60', 'cursor-wait', 'text-gray-500', 'border-gray-300');
+        link.classList.add('text-burgundy-800', 'border-burgundy-800/30', 'hover:bg-burgundy-800', 'hover:text-white');
+        link.title = 'Открыть презентацию по теме';
+        if (label) label.textContent = 'Презентация';
+      } else {
+        link.setAttribute('aria-disabled', 'true');
+        link.title = 'Загрузите эту презентацию из архива в папку presentations репозитория';
+        if (label) label.textContent = 'Файл ещё не загружен';
+      }
+    } catch (error) {
+      link.setAttribute('aria-disabled', 'true');
+      link.title = 'Проверка презентации доступна после публикации сайта';
+      if (label) label.textContent = 'Файл не проверен';
+    }
+  }));
 }
 
 function togglePlan(open){ document.querySelectorAll('#plan-root details').forEach(d => d.open = open); }
