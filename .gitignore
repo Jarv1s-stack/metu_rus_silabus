@@ -1,0 +1,10 @@
+# Secrets and local environment files
+.env
+.env.*
+!.env.example
+
+# Vercel local project metadata
+.vercel
+
+# Dependencies
+node_modules/
