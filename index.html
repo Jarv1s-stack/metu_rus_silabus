@@ -715,7 +715,7 @@ function syllabusContext(syllabus){
   (syllabus.litExtra || []).forEach(l => L.push(`- ${l.text} (${l.meta})`));
   L.push('', 'ЭКЗАМЕНАЦИОННЫЕ ВОПРОСЫ:');
   (syllabus.exam || []).forEach((q, i) => L.push(`${i + 1}. ${q}`));
-  return L.join('\\n');
+  return L.join('\n');
 }
 
 function courseContext(){
@@ -733,7 +733,7 @@ function courseContext(){
     ...GRADES.map(g => `${g[0]} = ${g[1]}, ${g[2]}% — ${g[3]}`),
     'Книги:',
     ...BOOKS.map(b => `- ${b.author}, «${b.title}» (${b.year})`)
-  ].join('\\n');
+  ].join('\n');
 }
 
 const SYSTEM_PROMPT = `Ты — ИИ-консультант учебного портала METU. В твоей базе есть два отдельных силлабуса по русскому языку уровня C1: осенний и весенний.
